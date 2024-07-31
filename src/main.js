@@ -5,9 +5,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import installElementPlus from './plugins/element'
-// 导入 svgIcon
+// svgIcon
 import installIcons from '@/icons'
 import i18n from '@/i18n'
+
+// 全局属性
+import installFilter from '@/filter'
 
 // 导入全局样式
 import './styles/index.scss'
@@ -18,4 +21,5 @@ import './permission'
 const app = createApp(App)
 installElementPlus(app)
 installIcons(app)
+installFilter(app)
 app.use(store).use(router).use(i18n).mount('#app')

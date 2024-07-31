@@ -24,6 +24,8 @@ service.interceptors.request.use(
         return Promise.reject(new Error('token 失效'))
       }
     }
+    // 配置接口国际化
+    config.headers['Accept-Language'] = store.getters.language
     return config // 必须返回配置
   },
   (error) => {
@@ -57,7 +59,7 @@ service.interceptors.response.use(
   },
   // 请求失败
   (error) => {
-    console.log('请求失败');
+    console.log('请求失败')
     // 处理token超时问题
     if (
       error.response &&
