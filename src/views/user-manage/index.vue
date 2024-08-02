@@ -53,10 +53,13 @@
         </el-table-column>
         <el-table-column :label="$t('msg.excel.action')" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="mini">{{
-              $t('msg.excel.show')
-            }}</el-button>
-            <el-button type="info" size="mini">{{
+            <el-button
+              type="primary"
+              size="mini"
+              @click="onShowClick(row._id)"
+              >{{ $t('msg.excel.show') }}</el-button
+            >
+            <el-button type="info" size="mini" @click="onShowRoleClick(row)">{{
               $t('msg.excel.showRole')
             }}</el-button>
             <el-button type="danger" size="mini" @click="onRemoveClick(row)">{{
@@ -81,18 +84,26 @@
 
     <!-- excel导出弹出框 -->
     <export-to-excel v-model="exportToExcelVisible"></export-to-excel>
+    <!-- 配置角色弹出框 -->
+    <!-- @updateRole="getListData"——监听角色更新成功事件，重新获取事件 -->
+    <roles-dialog
+      v-model="roleDialogVisible"
+      :userId="selectUserId"
+      @updateRole="getListData"
+    ></roles-dialog>
   </div>
   <div></div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { getUserManageList, deleteUser } from '@/api/user-mange'
 import { watchSwitchLang } from '@/utils/i18n'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import ExportToExcel from './components/Export2Excel.vue'
+import RolesDialog from './components/roles.vue'
 
 // 数据相关
 const tableData = ref([])
@@ -141,7 +152,6 @@ const onImportExcelClick = () => {
  */
 const i18n = useI18n()
 const onRemoveClick = (row) => {
-  console.log(row)
   ElMessageBox.confirm(
     i18n.t('msg.excel.dialogTitle1') +
       row.username +
@@ -162,6 +172,26 @@ const exportToExcelVisible = ref(false)
 const onToExcelClick = () => {
   exportToExcelVisible.value = true
 }
+
+// 查看按钮点击事件
+const onShowClick = (id) => {
+  router.push(`/user/info/${id}`)
+}
+
+// 查看角色的点击事件
+const roleDialogVisible = ref(false)
+// 获取当前行角色ID
+const selectUserId = ref('')
+const onShowRoleClick = (row) => {
+  roleDialogVisible.value = true
+  selectUserId.value = row._id
+}
+// 在dialog关闭时重置当前行角色ID
+// 保证每次打开时重新获取用户角色数据
+// 保证每次打开重新获取用户角色数据
+watch(roleDialogVisible, (val) => {
+  if (!val) selectUserId.value = ''
+})
 </script>
 
 <style lang="scss" scoped>

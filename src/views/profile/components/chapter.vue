@@ -21,7 +21,6 @@ import { chapters } from '@/api/user'
 import { ref } from 'vue'
 
 const chapterData = ref([])
-console.log(chapterData)
 const getChapterData = async () => {
   chapterData.value = await chapters()
 }

@@ -40,6 +40,7 @@ const privateRoutes = [
         path: '/user/info/:id',
         name: 'userInfo',
         component: () => import('@/views/user-info/index.vue'),
+        props: true, //用户详情可能以组件的形式呈现。所以要允许传参（id)
         meta: {
           title: 'userinfo'
         }
