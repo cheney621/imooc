@@ -29,7 +29,7 @@
     <!-- 分配权限弹出层 -->
     <distribute-permission
       v-model="distributePermissionVisible"
-      :roleID="selectRoleId"
+      :roleId="selectRoleId"
     ></distribute-permission>
   </div>
 </template>
