@@ -16,6 +16,7 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'vue/return-in-computed-property': 0,
     'quotes': 'off',
-    'semi': 'off'
+    'semi': 'off',
+    'import/no-duplicates':'off'
   }
 }

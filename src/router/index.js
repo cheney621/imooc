@@ -1,105 +1,23 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import layout from '@/layout'
+import ArticleCreaterRouter from './modules/ArticleCreate'
+import ArticleRouter from './modules/Article'
+import PermissionListRouter from './modules/PermissionList'
+import RoleListRouter from './modules/RoleList'
+import UserManageRouter from './modules/UserManage'
+import store from '@/store'
 
 // 私有路由表——权限路由
-const privateRoutes = [
-  {
-    path: '/user',
-    component: layout,
-    redirect: '/user/manage',
-    meta: {
-      title: 'user',
-      icon: 'personnel'
-    },
-    children: [
-      {
-        path: '/user/manage',
-        component: () => import('@/views/user-manage/index.vue'),
-        meta: {
-          title: 'userManage',
-          icon: 'personnel-manage'
-        }
-      },
-      {
-        path: '/user/role',
-        component: () => import('@/views/role-list/index.vue'),
-        meta: {
-          title: 'roleList',
-          icon: 'role'
-        }
-      },
-      {
-        path: '/user/permission',
-        component: () => import('@/views/permission-list/index.vue'),
-        meta: {
-          title: 'permissionList',
-          icon: 'permission'
-        }
-      },
-      {
-        path: '/user/info/:id',
-        name: 'userInfo',
-        component: () => import('@/views/user-info/index.vue'),
-        props: true, //用户详情可能以组件的形式呈现。所以要允许传参（id)
-        meta: {
-          title: 'userinfo'
-        }
-      },
-      {
-        path: '/user/import',
-        name: 'import',
-        component: () => import('@/views/import/index.vue'),
-        meta: {
-          title: 'execlImport'
-        }
-      }
-    ]
-  },
-  {
-    path: '/article',
-    component: layout,
-    redirect: '/article/ranking',
-    meta: {
-      title: 'article',
-      icon: 'article'
-    },
-    children: [
-      {
-        path: '/article/ranking',
-        component: () => import('@/views/article-ranking/index.vue'),
-        meta: {
-          title: 'articleRanking',
-          icon: 'articleRanking'
-        }
-      },
-      {
-        path: '/article/:id',
-        component: () => import('@/views/article-detail/index.vue'),
-        meta: {
-          title: 'articleDetail'
-        }
-      },
-      {
-        path: '/article/create',
-        component: () => import('@/views/article-create/index.vue'),
-        meta: {
-          title: 'articleCreate',
-          icon: 'articleCreate'
-        }
-      },
-      {
-        path: '/article/editor/:id',
-        component: () => import('@/views/article-create/index.vue'),
-        meta: {
-          title: 'articleEditor'
-        }
-      }
-    ]
-  }
+export const privateRoutes = [
+  RoleListRouter,
+  UserManageRouter,
+  PermissionListRouter,
+  ArticleCreaterRouter,
+  ArticleRouter
 ]
 
 // 公有路由表——无权限路由
-const publicRoutes = [
+export const publicRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index') //路由懒加载
@@ -119,6 +37,15 @@ const publicRoutes = [
         }
       },
       {
+        path: '/path',
+        name: 'chart',
+        component: () => import('@/views/chart'),
+        meta: {
+          title: 'chart',
+          icon: 'chart'
+        }
+      },
+      {
         path: '/404',
         name: '404',
         compoent: () => import('@/views/error-page/404.vue')
@@ -131,8 +58,23 @@ const publicRoutes = [
     ]
   }
 ]
+
+// 初始化路由表
+export function resetRoute() {
+  if (
+    store.getters.userInfo &&
+    store.getters.userInfo.permission &&
+    store.getters.userInfo.permission.menus
+  ) {
+    const menus = store.getters.userInfo.permission.menus
+    menus.forEach((menu) => {
+      router.removeRoute(menu)
+    })
+  }
+}
+
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: [...publicRoutes, ...privateRoutes]
+  routes: publicRoutes
 })
 export default router

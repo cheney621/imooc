@@ -22,6 +22,6 @@ export function isCheckTimeout() {
   // 当前时间戳
   const currentTime = Date.now()
   // 缓存时间戳
-  var timeStamp = getTimeStamp()
+  const timeStamp = getTimeStamp()
   return currentTime - timeStamp > TOKEN_TIMEOUT_VALUE
 }
